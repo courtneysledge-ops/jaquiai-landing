@@ -505,7 +505,99 @@
             max-width: 440px;
             margin: 0 auto;
         }
+/* ── HubSpot Form ── */
+.hubspot-form-wrapper {
+    max-width: 480px;
+    margin: 0 auto 16px;
+    text-align: left;
+}
 
+.hubspot-form-wrapper .hs-form-frame {
+    width: 100%;
+}
+
+/* Style HubSpot form to match our design */
+.hubspot-form-wrapper input[type="text"],
+.hubspot-form-wrapper input[type="email"],
+.hubspot-form-wrapper input[type="tel"] {
+    width: 100% !important;
+    border: 1.5px solid #C5D0EE !important;
+    border-radius: 10px !important;
+    padding: 13px 18px !important;
+    font-size: 15px !important;
+    font-family: 'Inter', sans-serif !important;
+    background: #FFFFFF !important;
+    color: #0F1929 !important;
+    margin-bottom: 12px !important;
+    box-sizing: border-box !important;
+}
+
+.hubspot-form-wrapper input[type="submit"],
+.hubspot-form-wrapper .hs-button {
+    background: #1B3A6B !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 14px 28px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    font-family: 'Inter', sans-serif !important;
+    cursor: pointer !important;
+    width: 100% !important;
+    margin-top: 8px !important;
+    transition: background 0.2s ease !important;
+}
+
+.hubspot-form-wrapper input[type="submit"]:hover,
+.hubspot-form-wrapper .hs-button:hover {
+    background: #142D54 !important;
+}
+
+.hubspot-form-wrapper .hs-error-msgs {
+    color: #C0392B !important;
+    font-size: 13px !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 4px 0 8px !important;
+}
+
+.hubspot-form-wrapper .hs-form-field {
+    margin-bottom: 12px !important;
+}
+
+.hubspot-form-wrapper label {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #0F1929 !important;
+    margin-bottom: 4px !important;
+    display: block !important;
+}
+
+.hubspot-form-wrapper .hs-richtext {
+    font-size: 12px !important;
+    color: #4A5568 !important;
+    line-height: 1.6 !important;
+}
+
+.hubspot-form-wrapper .hs-form-booleancheckbox-display {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    font-size: 13px !important;
+    color: #4A5568 !important;
+    cursor: pointer !important;
+}
+
+.hubspot-form-wrapper .submitted-message {
+    background: #EBF0FF !important;
+    border: 1px solid #C5D0EE !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    text-align: center !important;
+    font-size: 15px !important;
+    color: #1B3A6B !important;
+    font-weight: 500 !important;
+}
         /* ── Mobile ── */
         @media (max-width: 768px) {
             .stats {
@@ -687,30 +779,26 @@
     </section>
 
     <!-- ── CTA / Waitlist ── -->
-    <section class="cta" id="waitlist">
-        <div class="section-label">Early access</div>
-        <h2>Be first to access Jaqui AI</h2>
-        <p>Join the waitlist and get notified the moment we launch.</p>
+<section class="cta" id="waitlist">
+    <div class="section-label">Early access</div>
+    <h2>Be first to access Jaqui AI</h2>
+    <p>Join the waitlist and get notified the moment we launch.</p>
 
-        <form class="cta-form" name="waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
-    <input type="hidden" name="form-name" value="waitlist">
-    <input type="hidden" name="bot-field">
-    <input
-        type="email"
-        name="email"
-        placeholder="your@email.com"
-        required
-        id="email-input"
-    />
-    <button type="submit" class="btn-primary">Notify me</button>
-</form>
-
-        <div class="success-msg" id="success-msg">
-            🎉 You are on the list! We will email you when Jaqui AI launches.
+    <!-- HubSpot Form -->
+    <div class="hubspot-form-wrapper">
+        <script src="https://js-na2.hsforms.net/forms/embed/246418511.js"
+                defer>
+        </script>
+        <div
+            class="hs-form-frame"
+            data-region="na2"
+            data-form-id="2ad9b2d6-69b0-4dba-9b54-ffc7a0fd0687"
+            data-portal-id="246418511">
         </div>
+    </div>
 
-        <p class="cta-note">No spam. Unsubscribe any time.</p>
-    </section>
+    <p class="cta-note">No spam. Unsubscribe any time.</p>
+</section>
 
     <!-- ── Footer ── -->
     <footer>
