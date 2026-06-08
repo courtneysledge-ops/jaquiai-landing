@@ -545,6 +545,11 @@
 </head>
 <body>
 
+    <!-- Netlify form detection -->
+    <form name="waitlist" data-netlify="true" hidden>
+        <input type="email" name="email">
+    </form>
+
     <!-- ── Navigation ── -->
     <nav>
         <a href="#" class="nav-brand">
@@ -687,17 +692,18 @@
         <h2>Be first to access Jaqui AI</h2>
         <p>Join the waitlist and get notified the moment we launch.</p>
 
-        <form class="cta-form" name="waitlist" method="POST" data-netlify="true" onsubmit="handleSubmit(event)">
-            <input type="hidden" name="form-name" value="waitlist">
-            <input
-                type="email"
-                name="email"
-                placeholder="your@email.com"
-                required
-                id="email-input"
-            />
-            <button type="submit" class="btn-primary">Notify me</button>
-        </form>
+        <form class="cta-form" name="waitlist" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
+    <input type="hidden" name="form-name" value="waitlist">
+    <input type="hidden" name="bot-field">
+    <input
+        type="email"
+        name="email"
+        placeholder="your@email.com"
+        required
+        id="email-input"
+    />
+    <button type="submit" class="btn-primary">Notify me</button>
+</form>
 
         <div class="success-msg" id="success-msg">
             🎉 You are on the list! We will email you when Jaqui AI launches.
@@ -716,29 +722,100 @@
         <p>Built with ❤️ for beginner developers</p>
     </footer>
 
-    <script>
-        function handleSubmit(e) {
-            e.preventDefault();
-            const form = e.target;
-            const email = document.getElementById('email-input').value;
+    <!-- HubSpot embed script -->
+    <script src="https://js-na2.hsforms.net/forms/embed/246418511.js" defer></script>
 
-            fetch('/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    'form-name': 'waitlist',
-                    'email': email
-                }).toString()
-            })
-            .then(() => {
-                form.style.display = 'none';
-                document.getElementById('success-msg').style.display = 'block';
-            })
-            .catch(() => {
-                alert('Something went wrong. Please try again.');
-            });
-        }
+    <!-- HubSpot tracking pixel -->
+    <script type="text/javascript" id="hs-script-loader"
+        async defer
+        src="//js.hs-scripts.com/246418511.js">
     </script>
 
+    <script>
+        // ── HubSpot config ────────────────────────────────
+        const HUBSPOT_PORTAL_ID = "246418511";
+        const HUBSPOT_FORM_ID   = "2ad9b2d6-69b0-4dba-9b54-ffc7a0fd0687";
+        const HUBSPOT_REGION    = "na2";
+
+        // ── Submit to Netlify and HubSpot ─────────────────
+        function handleSubmit(e) {
+            e.preventDefault();
+
+            const form  = e.target;
+            const email = document.getElementById('email-input').value;
+
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+
+            // Disable button to prevent double submit
+            const btn = form.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled    = true;
+                btn.textContent = 'Sending...';
+            }
+
+            // Step 1 — Submit to Netlify Forms
+            const netlifySubmit = fetch('/', {
+                method:  'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'form-name': 'waitlist',
+                    'email':     email
+                }).toString()
+            });
+
+            // Step 2 — Submit to HubSpot CRM
+            const hubspotData = {
+                submittedAt: Date.now(),
+                fields: [
+                    {
+                        objectTypeId: "0-1",
+                        name:         "email",
+                        value:        email
+                    }
+                ],
+                context: {
+                    pageUri:  window.location.href,
+                    pageName: "Jaqui AI Waitlist — jaquiai.com"
+                }
+            };
+
+            const hubspotSubmit = fetch(
+                `https://api.hsforms.com/submissions/v3/integration/submit/${HUBSPOT_PORTAL_ID}/${HUBSPOT_FORM_ID}`,
+                {
+                    method:  'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(hubspotData)
+                }
+            );
+
+            // Step 3 — Wait for both then show success
+            Promise.allSettled([netlifySubmit, hubspotSubmit])
+                .then((results) => {
+                    const hubspotResult = results[1];
+                    if (hubspotResult.status === 'fulfilled') {
+                        console.log('HubSpot submission successful');
+                    } else {
+                        console.log('HubSpot submission failed:', hubspotResult.reason);
+                    }
+                    // Show success regardless
+                    form.style.display = 'none';
+                    document.getElementById('success-msg').style.display = 'block';
+                })
+                .catch((error) => {
+                    console.error('Submission error:', error);
+                    // Still show success to user
+                    form.style.display = 'none';
+                    document.getElementById('success-msg').style.display = 'block';
+                });
+        }
+    </script>
+    
 </body>
 </html>
